@@ -1,4 +1,6 @@
-public class ListaEstoque{
+import java.io.Serializable;
+public class ListaEstoque implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private No primeiro;
 	private No ultimo;
 	private int tamanho; // contador para saber a quantidade de produtos

@@ -1,8 +1,13 @@
+import java.io.*;
 import java.util.Scanner;
 
 public class App {
+	
+	private static final String ARQUIVO_ESTOQUE = "estoque.ser";
+    private static ListaEstoque estoque = new ListaEstoque();
+	
     public static void main(String[] args) {
-        ListaEstoque estoque = new ListaEstoque();
+    	carregarEstoque();
         Scanner sc = new Scanner(System.in);
 
         while (true) {
@@ -17,15 +22,16 @@ public class App {
 
             switch (opcao) {
                 case 1:
-                    cadastrarProduto(sc, estoque);
+                    cadastrarProduto(sc);
                     break;
                 case 2:
-                    removerProduto(sc, estoque);
+                    removerProduto(sc);
                     break;
                 case 3:
-                    mostrarEstoque(sc, estoque);
+                    mostrarEstoque(sc);
                     break;
                 case 4:
+                	salvarEstoque();
                     System.out.println("Sistema encerrado.");
                     return;
                 default:
@@ -33,7 +39,7 @@ public class App {
             }
         }
     }
-    public static void cadastrarProduto(Scanner sc, ListaEstoque estoque) {
+    public static void cadastrarProduto(Scanner sc) {
     	System.out.print("Informe o Nome do produto: ");
         String nomeProduto = sc.nextLine();
         System.out.print("Informe o preço: ");
@@ -56,13 +62,37 @@ public class App {
         }
     }
     
-    public static void removerProduto(Scanner sc, ListaEstoque estoque) {
+    public static void removerProduto(Scanner sc) {
     	System.out.print("Nome do produto para remover: ");
         String nomeRemover = sc.nextLine();
         estoque.removerProduto(nomeRemover);
     }
     
-    public static void mostrarEstoque(Scanner sc, ListaEstoque estoque) {
+    public static void mostrarEstoque(Scanner sc) {
     	estoque.mostrarEstoque();
+    }
+    
+ // Método para salvar o estoque em arquivo
+    private static void salvarEstoque() {
+        try (FileOutputStream fileOut = new FileOutputStream(ARQUIVO_ESTOQUE);
+             ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            out.writeObject(estoque);
+            System.out.println("Estoque salvo com sucesso!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Método para carregar o estoque de arquivo
+    private static void carregarEstoque() {
+        try (FileInputStream fileIn = new FileInputStream(ARQUIVO_ESTOQUE);
+             ObjectInputStream in = new ObjectInputStream(fileIn)) {
+            estoque = (ListaEstoque) in.readObject();
+            System.out.println("Estoque carregado com sucesso!");
+        } catch (FileNotFoundException e) {
+            System.out.println("Nenhum arquivo de estoque encontrado. Um novo será criado.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
