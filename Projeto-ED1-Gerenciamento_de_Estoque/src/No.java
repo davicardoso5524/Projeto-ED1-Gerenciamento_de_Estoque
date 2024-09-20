@@ -1,4 +1,6 @@
-public class No {
+import java.io.Serializable;
+public class No implements Serializable{
+	private static final long serialVersionUID = 1L;
 	Produto produto;
 	No anterior;
 	No proximo;
